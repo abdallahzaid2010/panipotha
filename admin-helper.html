@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin helper — generate a papers.json entry</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap"><span class="brand-mark">Admin helper</span></div></header>
+
+<main class="wrap" style="padding:40px 24px; max-width:640px;">
+  <h1>Add a paper</h1>
+  <p style="color:var(--ink-soft)">This page runs entirely in your browser — it does not upload anything. Fill the form, it builds the JSON entry, then copy it into <code>papers.json</code> and push to GitHub along with the PDF file in <code>papers/</code>.</p>
+
+  <form id="f">
+    <div class="field"><label>Title</label><input required id="title" placeholder="Mathematics — Paper I"></div>
+    <div class="field"><label>Level</label><input required id="level" placeholder="O/L, A/L, Grade 10…"></div>
+    <div class="field"><label>Subject</label><input required id="subject" placeholder="Mathematics"></div>
+    <div class="field"><label>Medium</label><input required id="medium" placeholder="Sinhala / Tamil / English"></div>
+    <div class="field"><label>Year</label><input required id="year" type="number" placeholder="2025"></div>
+    <div class="field"><label>Type</label><input required id="type" placeholder="Past Paper / Term Test"></div>
+    <div class="field"><label>PDF filename (must match the file you put in /papers)</label><input required id="fname" placeholder="ol-maths-2025-p1.pdf"></div>
+    <div class="field"><label>File size (optional, e.g. 1.2 MB)</label><input id="size" placeholder="1.2 MB"></div>
+    <button class="btn btn-primary" type="submit">Generate JSON entry</button>
+  </form>
+
+  <div class="field" style="margin-top:24px;">
+    <label>Copy this into papers.json</label>
+    <textarea id="out" rows="12" style="width:100%; font-family:monospace; padding:12px; border:1px solid var(--line); border-radius:3px;" readonly></textarea>
+  </div>
+  <button class="btn btn-ghost" id="copyBtn" type="button">Copy to clipboard</button>
+</main>
+
+<script>
+  const slug = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  document.getElementById("f").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = id => document.getElementById(id).value.trim();
+    const entry = {
+      id: slug(`${v("level")}-${v("subject")}-${v("year")}`),
+      title: v("title"),
+      level: v("level"),
+      subject: v("subject"),
+      medium: v("medium"),
+      year: Number(v("year")),
+      type: v("type"),
+      file: `papers/${v("fname")}`,
+      size: v("size") || undefined
+    };
+    document.getElementById("out").value = JSON.stringify(entry, null, 2) + ",";
+  });
+  document.getElementById("copyBtn").addEventListener("click", () => {
+    const out = document.getElementById("out");
+    out.select();
+    navigator.clipboard.writeText(out.value);
+  });
+</script>
+</body>
+</html>

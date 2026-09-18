@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panipotha — Sri Lankan Past Papers &amp; Study Papers</title>
+<meta name="description" content="A free archive of Sri Lankan school past papers and term test papers — O/L, A/L and Grade 6–11, in Sinhala, Tamil and English medium.">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">පනිපොත Panipotha</span>
+      <span class="brand-sub">Past Papers Archive</span>
+    </a>
+    <div class="header-actions" id="userChip">
+      <a class="btn btn-ghost" href="login.html">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Free &amp; open to every student in Sri Lanka</div>
+    <h1>Past papers, organised and ready when you need them</h1>
+    <p class="lede">Term tests and past papers for O/L, A/L and Grade 6–11, in Sinhala, Tamil and English medium. Preview any paper before you download it.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="statTotal">—</div><div class="label">papers available</div></div>
+      <div class="hero-stat"><div class="num">3</div><div class="label">languages covered</div></div>
+      <div class="hero-stat"><div class="num">O/L · A/L</div><div class="label">exam levels</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="filter-bar">
+    <input type="search" id="searchInput" placeholder="Search by subject, title or year…" aria-label="Search papers">
+    <select id="levelFilter" aria-label="Filter by level"><option value="">All levels</option></select>
+    <select id="subjectFilter" aria-label="Filter by subject"><option value="">All subjects</option></select>
+    <span class="filter-count" id="filterCount"></span>
+  </div>
+
+  <div class="paper-index" id="paperList" aria-live="polite">
+    <div class="empty-state">Loading papers…</div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Panipotha. Shared for study purposes only — please respect original copyright holders.</span>
+    <a href="login.html">Sign in</a>
+  </div>
+</footer>
+
+<!-- Preview modal -->
+<div class="modal-backdrop" id="previewModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+    <div class="modal-head">
+      <h3 id="previewTitle">Preview</h3>
+      <button class="modal-close" data-close-modal aria-label="Close preview">×</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="previewFrame" title="Paper preview"></iframe>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close-modal>Close</button>
+      <button class="btn btn-primary" id="previewDownload">Download</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sign-in gate modal -->
+<div class="modal-backdrop" id="gateModal">
+  <div class="modal" style="max-width:400px" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h3>Sign in to download</h3>
+      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    </div>
+    <div class="gate-body">
+      <p>Downloads are free — we just ask you to sign in first, so we can keep this archive available to everyone.</p>
+      <a class="btn btn-primary" id="gateSignIn" href="login.html">Sign in to continue</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module" src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  fetch("papers.json").then(r => r.json()).then(d => {
+    document.getElementById("statTotal").textContent = d.length;
+  }).catch(() => {});
+</script>
+</body>
+</html>

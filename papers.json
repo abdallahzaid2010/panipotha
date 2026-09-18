@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ol-maths-2024-p1",
+    "title": "Mathematics — Paper I",
+    "level": "O/L",
+    "subject": "Mathematics",
+    "medium": "English",
+    "year": 2024,
+    "type": "Past Paper",
+    "file": "papers/ol-maths-2024-p1.pdf",
+    "size": "1.2 MB"
+  },
+  {
+    "id": "ol-science-2023-p2",
+    "title": "Science — Paper II",
+    "level": "O/L",
+    "subject": "Science",
+    "medium": "Sinhala",
+    "year": 2023,
+    "type": "Past Paper",
+    "file": "papers/ol-science-2023-p2.pdf",
+    "size": "2.4 MB"
+  },
+  {
+    "id": "al-physics-2024",
+    "title": "Physics — Full Paper",
+    "level": "A/L",
+    "subject": "Physics",
+    "medium": "English",
+    "year": 2024,
+    "type": "Past Paper",
+    "file": "papers/al-physics-2024.pdf",
+    "size": "3.1 MB"
+  },
+  {
+    "id": "al-combined-maths-2023",
+    "title": "Combined Mathematics",
+    "level": "A/L",
+    "subject": "Combined Mathematics",
+    "medium": "Tamil",
+    "year": 2023,
+    "type": "Past Paper",
+    "file": "papers/al-combined-maths-2023.pdf",
+    "size": "2.8 MB"
+  },
+  {
+    "id": "grade10-history-term1",
+    "title": "History — Term 1 Test",
+    "level": "Grade 10",
+    "subject": "History",
+    "medium": "English",
+    "year": 2025,
+    "type": "Term Test",
+    "file": "papers/grade10-history-term1.pdf",
+    "size": "0.9 MB"
+  }
+]

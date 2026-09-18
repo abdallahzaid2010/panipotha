@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Panipotha</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">පනිපොත Panipotha</span>
+      <span class="brand-sub">Past Papers Archive</span>
+    </a>
+  </div>
+</header>
+
+<main class="auth-page">
+  <div class="auth-card">
+    <h1 id="formTitle">Sign in</h1>
+    <p class="sub" id="formSub">Sign in to download past papers.</p>
+
+    <div class="auth-error" id="authError"></div>
+
+    <form id="authForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password" minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Sign in</button>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <button class="btn btn-google" id="googleBtn">Continue with Google</button>
+
+    <div class="auth-switch">
+      <span id="switchText">Don't have an account?</span>
+      <a href="#" id="switchLink">Create one</a>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="assets/js/auth.js"></script>
+<script type="module">
+  const params = new URLSearchParams(location.search);
+  const next = params.get("next") || "index.html";
+
+  let mode = "signin"; // or "signup"
+  const form = document.getElementById("authForm");
+  const errorBox = document.getElementById("authError");
+  const submitBtn = document.getElementById("submitBtn");
+  const switchLink = document.getElementById("switchLink");
+  const switchText = document.getElementById("switchText");
+  const formTitle = document.getElementById("formTitle");
+  const formSub = document.getElementById("formSub");
+
+  function setMode(m) {
+    mode = m;
+    if (m === "signin") {
+      formTitle.textContent = "Sign in";
+      formSub.textContent = "Sign in to download past papers.";
+      submitBtn.textContent = "Sign in";
+      switchText.textContent = "Don't have an account?";
+      switchLink.textContent = "Create one";
+    } else {
+      formTitle.textContent = "Create an account";
+      formSub.textContent = "Takes a few seconds — no verification needed to start downloading.";
+      submitBtn.textContent = "Create account";
+      switchText.textContent = "Already have an account?";
+      switchLink.textContent = "Sign in";
+    }
+    errorBox.style.display = "none";
+  }
+
+  switchLink.addEventListener("click", e => {
+    e.preventDefault();
+    setMode(mode === "signin" ? "signup" : "signin");
+  });
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = "block";
+  }
+
+  function waitForAuth() {
+    return new Promise(resolve => {
+      const check = () => {
+        if (window.PanipothaAuth) resolve(window.PanipothaAuth);
+        else setTimeout(check, 30);
+      };
+      check();
+    });
+  }
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const Auth = await waitForAuth();
+    if (!Auth.isConfigured()) {
+      showError("Sign-in isn't connected yet. The site owner needs to add a Firebase config in assets/js/auth.js.");
+      return;
+    }
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    submitBtn.disabled = true;
+    try {
+      if (mode === "signin") await Auth.emailSignIn(email, password);
+      else await Auth.emailSignUp(email, password);
+      location.href = next;
+    } catch (err) {
+      showError(friendlyError(err));
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  document.getElementById("googleBtn").addEventListener("click", async () => {
+    const Auth = await waitForAuth();
+    if (!Auth.isConfigured()) {
+      showError("Sign-in isn't connected yet. The site owner needs to add a Firebase config in assets/js/auth.js.");
+      return;
+    }
+    try {
+      await Auth.googleSignIn();
+      location.href = next;
+    } catch (err) {
+      showError(friendlyError(err));
+    }
+  });
+
+  function friendlyError(err) {
+    const code = err?.code || "";
+    if (code.includes("wrong-password") || code.includes("invalid-credential")) return "Incorrect email or password.";
+    if (code.includes("user-not-found")) return "No account with that email. Try creating one.";
+    if (code.includes("email-already-in-use")) return "That email already has an account. Try signing in.";
+    if (code.includes("weak-password")) return "Password should be at least 6 characters.";
+    return "Something went wrong. Please try again.";
+  }
+</script>
+</body>
+</html>
